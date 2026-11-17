@@ -33,6 +33,7 @@
   <img class="thumb" id="thumb" alt="">
   <div><a class="join" id="join" href="#">Unirme ahora</a></div>
   <p class="hint" id="hint"></p>
+  <p class="hint" id="alt" style="display:none">¿No se abre? <a id="web" href="#" style="color:#02b757">Abrir con la cuenta de la app de Roblox</a></p>
 </main>
 <script>
   // Formato: invite.html#PLACEID/JOBID/NOMBRE_DEL_JUEGO (el nombre es opcional)
@@ -61,10 +62,14 @@
     thumb.addEventListener("load", () => { thumb.style.display = "block"; });
     thumb.src = "https://www.roblox.com/asset-thumbnail/image?assetId=" + placeId + "&width=768&height=432&format=png";
 
-    const url = "https://www.roblox.com/games/start?placeId=" + placeId + "&gameInstanceId=" + jobId;
-    join.href = url;
-    document.getElementById("hint").textContent = "Te redirigiremos en un momento…";
-    setTimeout(() => { location.href = url; }, 1800);
+    const query = "placeId=" + placeId + "&gameInstanceId=" + jobId;
+    const appUrl = "roblox://experiences/start?" + query;
+    const webUrl = "https://www.roblox.com/games/start?" + query;
+    join.href = webUrl;
+    document.getElementById("web").href = appUrl;
+    document.getElementById("alt").style.display = "block";
+    document.getElementById("hint").textContent = "Abriendo Roblox con tu cuenta del navegador…";
+    setTimeout(() => { location.href = webUrl; }, 1200);
   }
 </script>
 </body>
