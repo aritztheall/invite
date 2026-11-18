@@ -33,7 +33,7 @@
   <img class="thumb" id="thumb" alt="">
   <div><a class="join" id="join" href="#">Unirme ahora</a></div>
   <p class="hint" id="hint"></p>
-  <p class="hint" id="alt" style="display:none">¿No se abre? <a id="web" href="#" style="color:#02b757">Abrir con la cuenta de la app de Roblox</a></p>
+  <p class="hint" id="alt" style="display:none">¿No se abre? Prueba <a id="web" href="#" style="color:#02b757">el enlace web</a> o <a id="app" href="#" style="color:#02b757">la app de Roblox</a></p>
 </main>
 <script>
   // Formato: invite.html#PLACEID/JOBID/NOMBRE_DEL_JUEGO (el nombre es opcional)
@@ -63,13 +63,15 @@
     thumb.src = "https://www.roblox.com/asset-thumbnail/image?assetId=" + placeId + "&width=768&height=432&format=png";
 
     const query = "placeId=" + placeId + "&gameInstanceId=" + jobId;
-    const appUrl = "roblox://experiences/start?" + query;
+    const extUrl = "https://www.roblox.com/games/" + placeId + "/?aritzJoin=" + jobId;
     const webUrl = "https://www.roblox.com/games/start?" + query;
-    join.href = webUrl;
-    document.getElementById("web").href = appUrl;
+    const appUrl = "roblox://experiences/start?" + query;
+    join.href = extUrl;
+    document.getElementById("web").href = webUrl;
+    document.getElementById("app").href = appUrl;
     document.getElementById("alt").style.display = "block";
     document.getElementById("hint").textContent = "Abriendo Roblox con tu cuenta del navegador…";
-    setTimeout(() => { location.href = webUrl; }, 1200);
+    setTimeout(() => { location.href = extUrl; }, 1200);
   }
 </script>
 </body>
