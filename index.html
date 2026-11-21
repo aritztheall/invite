@@ -38,8 +38,23 @@
   <p class="hint" id="alt" style="display:none">¿No se abre? Prueba <a id="app" href="#" style="color:#02b757">con la app de Roblox</a></p>
 </main>
 <script>
-  // Formato: invite.html#PLACEID/JOBID/NOMBRE_DEL_JUEGO (el nombre es opcional)
-  const [placeId, jobId, rawName] = location.hash.slice(1).split("/");
+  // Estadísticas anónimas con GoatCounter (sin cookies, sin datos personales).
+  // Cambia TUCODIGO por el código que elijas al crear tu cuenta en goatcounter.com
+  const GOATCOUNTER_CODE = "https://theal.goatcounter.com/count";
+
+  function track(path, title) {
+    if (!GOATCOUNTER_CODE || GOATCOUNTER_CODE === "TUCODIGO") return;
+    window.goatcounter = { no_onload: true };
+    const gc = document.createElement("script");
+    gc.async = true;
+    gc.dataset.goatcounter = "https://" + GOATCOUNTER_CODE + ".goatcounter.com/count";
+    gc.src = "https://gc.zgo.at/count.js";
+    gc.onload = () => window.goatcounter.count({ path: path, title: title });
+    document.head.appendChild(gc);
+  }
+
+  // Formato: #PLACEID/JOBID/NOMBRE/IMAGEN (nombre e imagen son opcionales)
+  const [placeId, jobId, rawName, rawImg] = location.hash.slice(1).split("/");
   const ok = /^\d+$/.test(placeId || "") && /^[0-9a-fA-F-]{36}$/.test(jobId || "");
 
   // Si no existe logo.png, se muestra un círculo con la inicial
@@ -60,9 +75,17 @@
     try { name = decodeURIComponent(rawName || ""); } catch (e) {}
     title.textContent = name ? "Uniéndote a " + name : "Uniéndote al servidor";
 
+    // Cuenta la visita por juego; si el enlace lleva ?src=algo, también por origen
+    const src = new URLSearchParams(location.search).get("src");
+    track("/juego/" + placeId + (src ? "?src=" + encodeURIComponent(src) : ""), name || "Invitación");
+
     const thumb = document.getElementById("thumb");
     thumb.addEventListener("load", () => { thumb.style.display = "block"; });
-    thumb.src = "https://www.roblox.com/asset-thumbnail/image?assetId=" + placeId + "&width=768&height=432&format=png";
+    let img = "";
+    try { img = "https://" + decodeURIComponent(rawImg || ""); } catch (e) {}
+    let imgOk = false;
+    try { imgOk = new URL(img).hostname.endsWith(".rbxcdn.com"); } catch (e) {}
+    thumb.src = imgOk ? img : "https://www.roblox.com/asset-thumbnail/image?assetId=" + placeId + "&width=768&height=432&format=png";
 
     const query = "placeId=" + placeId + "&gameInstanceId=" + jobId;
     const webUrl = "https://www.roblox.com/games/start?" + query;
@@ -71,7 +94,7 @@
     document.getElementById("app").href = appUrl;
     document.getElementById("alt").style.display = "block";
     document.getElementById("hint").textContent = "Abriendo Roblox con tu cuenta del navegador…";
-    setTimeout(() => { location.href = webUrl; }, 1200);
+    setTimeout(() => { location.href = webUrl; }, 3000);
   }
 </script>
 </body>
