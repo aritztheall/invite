@@ -42,15 +42,14 @@
   // Cambia TUCODIGO por el código que elijas al crear tu cuenta en goatcounter.com
   const GOATCOUNTER_CODE = "theal";
 
-  function track(path, title) {
+    function track(path, title) {
     if (!GOATCOUNTER_CODE || GOATCOUNTER_CODE === "TUCODIGO") return;
-    window.goatcounter = { no_onload: true };
-    const gc = document.createElement("script");
-    gc.async = true;
-    gc.dataset.goatcounter = "https://" + GOATCOUNTER_CODE + ".goatcounter.com/count";
-    gc.src = "https://gc.zgo.at/count.js";
-    gc.onload = () => window.goatcounter.count({ path: path, title: title });
-    document.head.appendChild(gc);
+    const url = "https://" + GOATCOUNTER_CODE + ".goatcounter.com/count"
+      + "?p=" + encodeURIComponent(path)
+      + "&t=" + encodeURIComponent(title)
+      + "&r=" + encodeURIComponent(document.referrer)
+      + "&rnd=" + Math.random().toString(36).slice(2);
+    new Image().src = url;
   }
 
   // Formato: #PLACEID/JOBID/NOMBRE/IMAGEN (nombre e imagen son opcionales)
